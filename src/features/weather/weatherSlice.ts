@@ -1,14 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {fetchWeather} from "../api/fetchWeather.ts";
+import type {WeatherInfo} from "../../utils/types";
 
 
 const weatherSlice = createSlice({
     name: 'weather',
-    initialState: {
-        city: '',
-        temp: NaN,
-        pressure: NaN,
-    },
+    initialState: {} as WeatherInfo,
     reducers: {},
     extraReducers: (builder) => {
         builder
@@ -17,15 +14,13 @@ const weatherSlice = createSlice({
                 state.temp = NaN;
                 state.pressure = NaN;
             })
-            .addCase(fetchWeather.rejected, () => {
-
+            .addCase(fetchWeather.rejected, (state) => {
+                state.city = 'Enter correct city name',
+                state.temp = NaN,
+                state.pressure = NaN
             })
-            .addCase(fetchWeather.fulfilled, (state, action) => {
-                const { city, temp, pressure } = action.payload;
-                state.city = city;
-                state.temp = temp;
-                state.pressure = pressure;
-            });
+            .addCase (fetchWeather.fulfilled, (_state, action) => action.payload)
+
     }
 });
 
